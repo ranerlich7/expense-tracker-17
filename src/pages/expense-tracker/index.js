@@ -5,8 +5,11 @@ import useGetUserInfo from "../../hooks/useGetUserInfo"
 import { useNavigate } from "react-router-dom"
 
 import { auth } from "../../config/firebase-config"
+import { useGetTransactions } from "../../hooks/useGetTransactions"
 
 export const ExpenseTracker = () => {
+  const { transactions } = useGetTransactions()
+
   const { addTransaction } = useAddTransaction()
   const { name, profilePhoto } = useGetUserInfo()
   const navigate = useNavigate()
@@ -90,6 +93,28 @@ export const ExpenseTracker = () => {
       </div>
       <div className="transactions">
         <h3> Transactions</h3>
+        <ul>
+          {transactions.map((transaction) => {
+            const { description, transactionAmount, transactionType } =
+              transaction
+            return (
+              <li>
+                <h4> {description} </h4>
+                <p>
+                  ${transactionAmount} •{" "}
+                  <label
+                    style={{
+                      color: transactionType === "expense" ? "red" : "green",
+                    }}
+                  >
+                    {" "}
+                    {transactionType}{" "}
+                  </label>
+                </p>
+              </li>
+            )
+          })}
+        </ul>
       </div>
     </>
   )
